@@ -153,6 +153,8 @@ public:
 	vector <unsigned long> cycles;
 	std::map <unsigned long,unsigned long> timemap;
 	bool backtracking = false;
+    double max_runtime;
+    int max_src;
 //    unsigned long c_foremost, c_reverse, c_fastest, c_weight, c_minhop, c_waiting;
     unsigned long c_foremost, c_reverse, c_fastest, c_weight, c_minhop, c_waiting;     //Anuj changes
 
@@ -1002,6 +1004,11 @@ void Graph::run_linear_combination(unsigned long source){
 	t.stop();
 	double time_sum = t.GetRuntime();
 	run_time.push_back(time_sum);
+    if (time_sum > max_runtime)
+    {
+        max_runtime = time_sum;
+        max_src = (int) source;
+    }
     print_earliest(algo);       //Anuj
     delete [] algo;
 }
@@ -1024,6 +1031,7 @@ void Graph::print_avg_time(){
 		time_sum+=run_time[i];
 	}
 	cout<<"Average time: "<< time_sum/sources.size() <<endl;
+    cout <<"Max runtime: " <<max_runtime <<" Max src: "<<max_src<<endl;
 }
 
 
@@ -1097,7 +1105,7 @@ void Graph::print_time(string s){
 void Graph::print_earliest(char* algo){
 	for(unsigned long i=0;i<original_V;i++){
 //        if(arr_time[i]!=infinity && arr_time[i]!=-infinity){
-            cout<< i << ": " << arr_time[i]<<endl;           //Anuj
+            cout<< i << " " << arr_time[i]<<endl;           //Anuj
   //      }
 	}
 }

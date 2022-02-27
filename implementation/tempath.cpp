@@ -122,7 +122,7 @@ int main(int argc, char* argv[]){
 	  ("s,source", "Source node of the graph", cxxopts::value<unsigned long>()->default_value("0"))  // @suppress("Symbol is not resolved") // @suppress("Invalid arguments") // @suppress("Method cannot be resolved")
 	  ("numsource", "Random number of sources", cxxopts::value<unsigned long>())  // @suppress("Symbol is not resolved") // @suppress("Invalid arguments")
 	  ("a,algo", "String containing the flag of the algorithm to use.", cxxopts::value<std::string>()->default_value("algo1"))  // @suppress("Symbol is not resolved") // @suppress("Invalid arguments") // @suppress("Method cannot be resolved")
-	  ("createList", "Create a list of sources.", cxxopts::value<unsigned long>())  // @suppress("Symbol is not resolved") // @suppress("Invalid arguments")
+	  ("c,createList", "Create a list of sources.", cxxopts::value<unsigned long>())  // @suppress("Symbol is not resolved") // @suppress("Invalid arguments")
 	  ("l,linear", "Linear Combination", cxxopts::value<bool>()->default_value("false")->implicit_value("true"))  // @suppress("Symbol is not resolved") // 
 	  ("u,foremost", "Weight Foremost", cxxopts::value<unsigned long>()->default_value("1"))  // @suppress("Symbol is not resolved") //
 	  ("v,reverse", "Weight Reverse-Foremost", cxxopts::value<unsigned long>()->default_value("1"))  // @suppress("Symbol is not resolved") //
@@ -188,6 +188,8 @@ int main(int argc, char* argv[]){
 	}
 	Timer t;
 	vector<double> pathruntime;
+    g.max_runtime = 0;
+    g.max_src = -1;
 	//For each source
 	for(unsigned long source: g.sources){
 		//run algorithm
