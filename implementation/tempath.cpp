@@ -191,10 +191,11 @@ int main(int argc, char* argv[]){
     g.max_runtime = 0;
     g.max_src = -1;
 	//For each source
+    std::ofstream timings_file("./timings");
 	for(unsigned long source: g.sources){
 		//run algorithm
         if(result.count("linear") != 0) {
-            g.run_algo_linear_combination(source, result["foremost"].as<unsigned long>(), result["reverse"].as<unsigned long>(), result["fastest"].as<unsigned long>(), result["weight"].as<unsigned long>(), result["minhop"].as<unsigned long>(), result["waiting"].as<unsigned long>());
+            g.run_algo_linear_combination(source, result["foremost"].as<unsigned long>(), result["reverse"].as<unsigned long>(), result["fastest"].as<unsigned long>(), result["weight"].as<unsigned long>(), result["minhop"].as<unsigned long>(), result["waiting"].as<unsigned long>(), timings_file);
         } else {
             g.run_algo(strdup(result["algo"].as<std::string>().c_str()), source);
         }
@@ -206,7 +207,7 @@ int main(int argc, char* argv[]){
 		}
 
                 //added by sanaz (for debugging):
-                g.print_earliest(strdup(result["algo"].as<std::string>().c_str()));
+                //g.print_earliest(strdup(result["algo"].as<std::string>().c_str()));
 
 		//use backtracking from source
 		if(result["backtracking"].as<bool>()){

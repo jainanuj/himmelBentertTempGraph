@@ -67,7 +67,7 @@ public:
     //additional function
     void print_path();
     void pathing(unsigned long end, unsigned long source);
-    void print_earliest(char* algo);
+    void print_earliest(char* algo, int source);
     void print_time(string s);
     void count_visited();
 
@@ -116,8 +116,8 @@ public:
     void dwell_for_number(unsigned long x);
     void run_algo(char* algo, unsigned long source);
     
-    void run_algo_linear_combination(unsigned long source, unsigned long c1, unsigned long c2, unsigned long c3, unsigned long c4, unsigned long c5, unsigned long c6);
-    void run_linear_combination(unsigned long source);
+    void run_algo_linear_combination(unsigned long source, unsigned long c1, unsigned long c2, unsigned long c3, unsigned long c4, unsigned long c5, unsigned long c6, std::ofstream& timings);
+    void run_linear_combination(unsigned long source, std::ofstream& timings);
     void initial_linear_combination(unsigned long source);
     void linear_combination(unsigned long source);
     
@@ -321,7 +321,7 @@ void Graph::run_algo(char* algo, unsigned long source){
 	count_visited();
 }
 
-void Graph::run_algo_linear_combination(unsigned long source, unsigned long c1, unsigned long c2, unsigned long c3, unsigned long c4, unsigned long c5, unsigned long c6){
+void Graph::run_algo_linear_combination(unsigned long source, unsigned long c1, unsigned long c2, unsigned long c3, unsigned long c4, unsigned long c5, unsigned long c6, std::ofstream& timings){
     c_foremost = c1;
     c_reverse = c2;
     c_fastest = c3;
@@ -329,7 +329,7 @@ void Graph::run_algo_linear_combination(unsigned long source, unsigned long c1, 
     c_minhop = c5;
     c_waiting = c6;
     
-    run_linear_combination(source);
+    run_linear_combination(source, timings);
     count_visited();
 }
 
@@ -993,7 +993,7 @@ void Graph::run_reverse_foremost(unsigned long source){
 /*
  * Run our linear combination for every source
  */
-void Graph::run_linear_combination(unsigned long source){
+void Graph::run_linear_combination(unsigned long source, std::ofstream& timings){
     initial_variations(source);
     char* algo = new char[10];
     strcpy(algo,"linear");
@@ -1003,13 +1003,14 @@ void Graph::run_linear_combination(unsigned long source){
 	linear_combination(source);
 	t.stop();
 	double time_sum = t.GetRuntime();
+    timings << source << "   " << t.GetRuntime() << endl;
 	run_time.push_back(time_sum);
     if (time_sum > max_runtime)
     {
         max_runtime = time_sum;
         max_src = (int) source;
     }
-    print_earliest(algo);       //Anuj
+    print_earliest(algo, source);       //Anuj
     delete [] algo;
 }
 
@@ -1102,12 +1103,22 @@ void Graph::print_time(string s){
 	cout<<s<<"Average: "<<mean/length<<endl;
 }
 
-void Graph::print_earliest(char* algo){
-	for(unsigned long i=0;i<original_V;i++){
+void Graph::print_earliest(char* algo, int source){
+    string resultsFile = "./results_" + std::to_string(source) + ".txt";
+    std::ofstream fresults(resultsFile);
+
+    /*for debugging only*/
+    fresults << original_V << endl;
+    for(int i=0; i<original_V; i++)
+        //cout << i << "  " << opt_linCombo[i] << endl;
+        fresults << i << "  " << arr_time[i] << endl;
+
+    
+//	for(unsigned long i=0;i<original_V;i++){
 //        if(arr_time[i]!=infinity && arr_time[i]!=-infinity){
-            cout<< i << " " << arr_time[i]<<endl;           //Anuj
+//            cout<< i << " " << arr_time[i]<<endl;           //Anuj
   //      }
-	}
+//	}
 }
 
 void Graph::print_sources(){
